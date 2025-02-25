@@ -128,6 +128,20 @@ NSString * const ID = @"SDCycleScrollViewCell";
     return cycleScrollView;
 }
 
++ (instancetype)cycleScrollViewWithFrame:(CGRect)frame delegate:(id<SDCycleScrollViewDelegate>)delegate placeholderImage:(UIImage *)placeholderImage backgroundImage:(UIImage *)backgroundImage {
+    
+    SDCycleScrollView *cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:frame delegate:delegate placeholderImage:placeholderImage];
+    
+    if (!cycleScrollView.backgroundImageView) {
+        UIImageView *bgImageView = [UIImageView new];
+        bgImageView.contentMode = UIViewContentModeScaleAspectFit;
+        [cycleScrollView insertSubview:bgImageView belowSubview:cycleScrollView.mainView];
+        cycleScrollView.backgroundImageView = bgImageView;
+    }
+    cycleScrollView.backgroundImageView.image = backgroundImage;
+    return  cycleScrollView;
+}
+
 // 设置显示图片的collectionView
 - (void)setupMainView
 {
@@ -168,14 +182,14 @@ NSString * const ID = @"SDCycleScrollViewCell";
 {
     _placeholderImage = placeholderImage;
     
-    if (!self.backgroundImageView) {
-        UIImageView *bgImageView = [UIImageView new];
-        bgImageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self insertSubview:bgImageView belowSubview:self.mainView];
-        self.backgroundImageView = bgImageView;
-    }
-    
-    self.backgroundImageView.image = placeholderImage;
+//    if (!self.backgroundImageView) {
+//        UIImageView *bgImageView = [UIImageView new];
+//        bgImageView.contentMode = UIViewContentModeScaleAspectFit;
+//        [self insertSubview:bgImageView belowSubview:self.mainView];
+//        self.backgroundImageView = bgImageView;
+//    }
+//
+//    self.backgroundImageView.image = placeholderImage;
 }
 
 - (void)setPageControlDotSize:(CGSize)pageControlDotSize
@@ -318,6 +332,7 @@ NSString * const ID = @"SDCycleScrollViewCell";
 {
     _imageURLStringsGroup = imageURLStringsGroup;
     
+    self.backgroundImageView.hidden = imageURLStringsGroup.count != 0;
     NSMutableArray *temp = [NSMutableArray new];
     [_imageURLStringsGroup enumerateObjectsUsingBlock:^(NSString * obj, NSUInteger idx, BOOL * stop) {
         NSString *urlString;
